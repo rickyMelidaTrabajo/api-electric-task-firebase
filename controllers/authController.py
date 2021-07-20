@@ -4,8 +4,9 @@ from config import firebase
 def sigin(email, password):
     login = firebase.auth()
     try:
-        login.sign_in_with_email_and_password(email, password)
-        return 'Usuario autenticado correctamente'
+        usr = login.sign_in_with_email_and_password(email, password)
+        print(usr['email'])
+        return usr
     except:
         return 'Email o password incorrecto'
 

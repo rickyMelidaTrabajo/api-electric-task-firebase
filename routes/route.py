@@ -5,7 +5,7 @@ from .auth import auth
 
 
 def route(app):
-    technician(app, '/technician/')
-    user(app, '/user/')
-    task(app, '/task/')
-    auth(app, '/auth/')
+    technician(app, '/api/technician/')
+    user(app, '/api/user/')
+    task(app, '/api/task/')
+    auth(app, '/api/auth/')

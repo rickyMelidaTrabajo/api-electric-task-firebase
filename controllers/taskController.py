@@ -3,28 +3,54 @@ db = firebase.database()
 
 
 def getPendingTasks():
-
-    return 'I am in getPendingTask method'
+    tasks = []
+    try:
+        pendingTasks = db.child('tasks').child('pending-tasks').get()
+        for task in pendingTasks.each():
+            tasks.append(task.val())
+        print(tasks)
+        return {'tasks': tasks}
+    except:
+        return 'No ha tareas pendientes'
 
 
 def getFinishedTasks():
-    return 'Return all the tasks finalize'
+    try:
+        tasks = []
+        finishedTasks = db.child('tasks').child('finished-tasks').get()
+        for task in finishedTasks:
+            tasks.append(task.val())
+        return {'tasks': tasks}
+    except:
+        return 'No ha tareas finalizadas'
 
 
-def setPendingTask():
-    return 'Add new pending task'
+def setPendingTask(data):
+    try:
+        db.child('tasks').child('pending-tasks').push(data)
+        return 'Se ha agregado correctamente la tarea'
+    except:
+        return 'No se pudo agregar la tarea'
 
 
-def setFinishedTask():
-    return 'Add new finished task'
+def setFinishedTask(data):
+    try:
+        db.child('tasks').child('finished-tasks').push(data)
+        return 'Se ha agregado correctamente la tarea'
+    except:
+        return 'No se pudo agregar la tarea'
 
 
 def getTaskBy(searchBy, name):
-    return 'Return task by type'
+    return 'Return all tasks'
 
 
 def getTasks():
-    return 'Return all tasks'
+    try:
+        tasks = db.child('tasks').get()
+        return tasks
+    except:
+        return 'Error al obtner las tareas'
 
 
 def getHoursBy(typeTask):
