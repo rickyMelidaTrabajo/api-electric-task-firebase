@@ -35,4 +35,12 @@ def task(app, url):
 
     @app.route(url+'set-finished-task', methods=['GET', 'POST'])
     def setFinishedTask():
+        if request.method == 'POST':
+            type = request.form['type']
+            description = request.form['description']
+            startTime = request.form['start-time']
+            endTime = request.form['end-time']
+            hourMan = request.form['hour-man']
+            turn = request.form['turn']
+            
         return 'This is setFinishedTask route'

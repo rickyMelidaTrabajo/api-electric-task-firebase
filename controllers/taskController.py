@@ -8,8 +8,7 @@ def getPendingTasks():
         pendingTasks = db.child('tasks').child('pending-tasks').get()
         for task in pendingTasks.each():
             tasks.append(task.val())
-        print(tasks)
-        return {'tasks': tasks}
+        return {'tasks': tasks, 'lenght': len(tasks)}
     except:
         return 'No ha tareas pendientes'
 
@@ -20,7 +19,7 @@ def getFinishedTasks():
         finishedTasks = db.child('tasks').child('finished-tasks').get()
         for task in finishedTasks:
             tasks.append(task.val())
-        return {'tasks': tasks}
+        return {'tasks': tasks, 'lenght': len(tasks)}
     except:
         return 'No ha tareas finalizadas'
 

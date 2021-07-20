@@ -15,7 +15,8 @@ def sigup(email, password, checkPassword):
     register = firebase.auth()
     if password == checkPassword:
         try:
-            register.create_user_with_email_and_password(email, password)
+            usr = register.create_user_with_email_and_password(email, password)
+            print(usr)
             return 'Usuario registrado correctamente'
         except:
             return 'Email ya esta registrado'

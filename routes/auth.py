@@ -23,7 +23,7 @@ def auth(app, url):
 
             return authController.sigup(email, password, passwordCheck)
         else:
-            return 'This is sigup route'
+            return 'Error al registrar usuario'
 
     @app.route(url+'token-verify', methods=['GET', 'POST'])
     def tokenValidate():
