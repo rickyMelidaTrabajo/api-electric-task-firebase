@@ -1,6 +1,7 @@
 from controllers import userController
 from flask import request
 
+
 def user(app, url):
     @app.route(url+'get-user', methods=['GET'])
     def getUser():
@@ -15,20 +16,18 @@ def user(app, url):
 
     @app.route(url+'set-user', methods=['GET', 'POST'])
     def setUser():
-        data = {}
+        dataUsers = {
+            'username': '',
+            'email': '',
+            'password': '',
+            'rol': ''
+        }
+
         if request.method == 'POST':
-            username = request.form['username']
-            email = request.form['email']
-            password = request.form['email']
-            rol = request.form['email']
-
-            data['username'] = username
-            data['email'] = email
-            data['password'] = password
-            data['rol'] = rol
-
+            for usr in dataUsers:
+                dataUsers[usr] = request.form[usr]
         try:
-            userController.setUser(data)
+            userController.setUser(dataUsers)
             return 'Se ha agregado usuario correctamente'
         except:
             return 'Error al agregar nuevo usuario'

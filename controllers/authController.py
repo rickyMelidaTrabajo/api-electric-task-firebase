@@ -1,4 +1,5 @@
 from config import firebase
+from cryptography.fernet import Fernet
 
 
 def sigin(email, password):
@@ -13,11 +14,13 @@ def sigin(email, password):
 
 def sigup(email, password, checkPassword):
     register = firebase.auth()
+    passw = Fernet(password)
+
     if password == checkPassword:
         try:
             usr = register.create_user_with_email_and_password(email, password)
             print(usr)
-            return 'Usuario registrado correctamente'
+            return {'users': usr}
         except:
             return 'Email ya esta registrado'
     else:
