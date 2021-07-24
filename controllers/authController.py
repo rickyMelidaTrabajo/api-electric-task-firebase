@@ -1,23 +1,25 @@
 from config import firebase
-from cryptography.fernet import Fernet
-
+from flask import make_response
 
 def sigin(email, password):
     login = firebase.auth()
     try:
         usr = login.sign_in_with_email_and_password(email, password)
         print(usr['email'])
-        return usr
+        resp = make_response('Cookie conectada')
+        resp.set_cookie('miCookie', 'mi cookie personalizada')
+
+        return 'resp'
     except:
         return 'Email o password incorrecto'
 
 
 def sigup(email, password, checkPassword):
     register = firebase.auth()
-    passw = Fernet(password)
 
     if password == checkPassword:
         try:
+            cre = register.credentials()
             usr = register.create_user_with_email_and_password(email, password)
             print(usr)
             return {'users': usr}

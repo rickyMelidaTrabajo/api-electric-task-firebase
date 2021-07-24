@@ -1,4 +1,8 @@
 from config import firebase
+import uuid
+import controllers.numberTasks as TaskNumber
+import controllers.technicianController as Technician
+from datetime import datetime
 db = firebase.database()
 
 
@@ -8,9 +12,9 @@ def getPendingTasks():
         pendingTasks = db.child('tasks').child('pending-tasks').get()
         for task in pendingTasks.each():
             tasks.append(task.val())
-        return {'tasks': tasks, 'lenght': len(tasks)}
+        return { 'tasks': tasks }
     except:
-        return 'No ha tareas pendientes'
+        return 'No hay tareas pendientes'
 
 
 def getFinishedTasks():
@@ -24,17 +28,21 @@ def getFinishedTasks():
         return 'No ha tareas finalizadas'
 
 
-def setPendingTask(data):
+def setPendingTask(dataForm):
+    _id = uuid.uuid1().hex
+    taskNumber = TaskNumber.getNumberTasks(db) + 1
+    dateGeneration = datetime.now().strftime('%d-%m-%Y')
+
     try:
-        db.child('tasks').child('pending-tasks').push(data)
-        return 'Se ha agregado correctamente la tarea'
+        db.child('tasks').child('pending-tasks').push(dataForm)
+        return {'message' : 'Se ha agregado correctamente la tarea', 'taskNumber': taskNumber}
     except:
         return 'No se pudo agregar la tarea'
 
 
-def setFinishedTask(data):
+def setFinishedTask(dataForm):
     try:
-        db.child('tasks').child('finished-tasks').push(data)
+        db.child('tasks').child('finished-tasks').push(dataForm)
         return 'Se ha agregado correctamente la tarea'
     except:
         return 'No se pudo agregar la tarea'

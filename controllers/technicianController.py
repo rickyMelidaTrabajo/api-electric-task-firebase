@@ -30,6 +30,9 @@ def setTechnician(data):
 def getWithUsername(username):
     return 'Return technician with your username'
 
+def getWithEmail(email):
+    return 'Return technician with your username'
+
 
 def getHours():
     return 'Return hours total from technician'

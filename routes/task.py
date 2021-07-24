@@ -18,29 +18,61 @@ def task(app, url):
 
     @app.route(url+'set-pending-task', methods=['GET', 'POST'])
     def setPendingTask():
+        dataForm = {
+            'type': '',
+            'description': '',
+            'turn': ''
+        }
+
+        #_id
+        #taskNumber
+        #type = request.form['type']
+        #state = 'Pendiente'
+        #description = request.form['description']
+        #dateGeneration
+        #turn = request.form['turn']
+        #name
+        #position
         if request.method == 'POST':
-            type = request.form['type']
-            state = request.form['state']
-            description = request.form['description']
-            turn = request.form['turn']
 
-            data = {
-                'type': type,
-                'state': state,
-                'description': description,
-                'turn': turn
-            }
+            for data in dataForm:
+                dataForm[data] = request.form[data]
 
-        return taskController.setPendingTask(data)
+        return taskController.setPendingTask(dataForm)
 
     @app.route(url+'set-finished-task', methods=['GET', 'POST'])
     def setFinishedTask():
+        dataForm = {
+            'type': '',
+            'turn': '',
+            'startTime': '',
+            'endTime': '',
+            'hourMan': '',
+            'description': '',
+            #'imageBefore': '',
+            #'imageAfter': ''
+        }
         if request.method == 'POST':
-            type = request.form['type']
-            description = request.form['description']
-            startTime = request.form['start-time']
-            endTime = request.form['end-time']
-            hourMan = request.form['hour-man']
-            turn = request.form['turn']
-            
-        return 'This is setFinishedTask route'
+            #_id
+            #taskNumber
+            #type = request.form['type']
+            #state = 'Finalizado'
+            #description = request.form['description']
+            #dateGeneration
+            #dateClosing
+            #startTime = request.form['start-time']
+            #endTime = request.form['end-time']
+            #hourMan = request.form['hour-man']
+            #imageBefore
+            #imageAfter
+            #turn = request.form['turn']
+            #name
+            #position
+
+            for data in dataForm:
+                dataForm[data] = request.form[data]
+
+            try:
+                return taskController.setFinishedTask(dataForm)
+            except:
+                return 'Error al agregar tarea finalizada'
