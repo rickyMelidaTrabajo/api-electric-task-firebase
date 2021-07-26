@@ -1,15 +1,12 @@
 from config import firebase
 from flask import make_response
+from flask.globals import request
 
 def sigin(email, password):
     login = firebase.auth()
     try:
         usr = login.sign_in_with_email_and_password(email, password)
-        print(usr['email'])
-        resp = make_response('Cookie conectada')
-        resp.set_cookie('miCookie', 'mi cookie personalizada')
-
-        return 'resp'
+        return {'user' : usr}
     except:
         return 'Email o password incorrecto'
 
@@ -19,7 +16,6 @@ def sigup(email, password, checkPassword):
 
     if password == checkPassword:
         try:
-            cre = register.credentials()
             usr = register.create_user_with_email_and_password(email, password)
             print(usr)
             return {'users': usr}

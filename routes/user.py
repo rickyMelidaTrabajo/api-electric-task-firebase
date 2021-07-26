@@ -1,5 +1,6 @@
 from controllers import userController
 from flask import request
+import crypt
 
 
 def user(app, url):
@@ -20,6 +21,7 @@ def user(app, url):
             'username': '',
             'email': '',
             'password': '',
+            'checkPassword':'',
             'rol': ''
         }
 
@@ -27,7 +29,13 @@ def user(app, url):
             for usr in dataUsers:
                 dataUsers[usr] = request.form[usr]
         try:
-            userController.setUser(dataUsers)
-            return 'Se ha agregado usuario correctamente'
+            if dataUsers['password'] == dataUsers['checkPassword']:
+                dataUsers['password'] = crypt.crypt(request.form['password'], 'taks')
+                dataUsers['checkPassword'] = crypt.crypt(request.form['checkPassword'], 'taks')
+            
+                return userController.setUser(dataUsers)
+            else:
+                return 'Las contraseñas no coinciden'
+
         except:
             return 'Error al agregar nuevo usuario'
