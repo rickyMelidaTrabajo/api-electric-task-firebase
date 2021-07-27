@@ -26,11 +26,13 @@ def task(app, url):
         }
 
         if request.method == 'POST':
+            try:
+                for data in dataForm:
+                    dataForm[data] = request.form[data]
 
-            for data in dataForm:
-                dataForm[data] = request.form[data]
-
-        return taskController.setPendingTask(dataForm)
+                return taskController.setPendingTask(dataForm)
+            except:
+                return {'message': 'Faltan completar algunos campos.'}
 
     @app.route(url+'set-finished-task', methods=['GET', 'POST'])
     def setFinishedTask():

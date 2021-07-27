@@ -8,7 +8,7 @@ def getUser(id):
     try:
         userDB = db.child('users').child(id).get()
 
-        for user in userDB:
+        for user in userDB.each():
             usr[user.key()] = user.val()
 
         return usr

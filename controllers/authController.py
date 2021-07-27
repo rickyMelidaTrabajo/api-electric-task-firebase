@@ -5,9 +5,9 @@ from controllers import userController
 
 def sigin(email, password):
     login = firebase.auth()
-    cookie = make_response('Usuario autenticado correctamente')
 
     try:
+        cookie = make_response('Usuario autenticado correctamente')
 
         login = login.sign_in_with_email_and_password(email, password)
 
