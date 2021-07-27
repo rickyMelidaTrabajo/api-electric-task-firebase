@@ -3,6 +3,8 @@ import uuid
 import controllers.numberTasks as TaskNumber
 import controllers.technicianController as Technician
 from datetime import datetime
+from flask.globals import request
+
 db = firebase.database()
 
 
@@ -12,7 +14,7 @@ def getPendingTasks():
         pendingTasks = db.child('tasks').child('pending-tasks').get()
         for task in pendingTasks.each():
             tasks.append(task.val())
-        return { 'tasks': tasks }
+        return {'tasks': tasks}
     except:
         return 'No hay tareas pendientes'
 
@@ -29,13 +31,18 @@ def getFinishedTasks():
 
 
 def setPendingTask(dataForm):
-    _id = uuid.uuid1().hex
-    taskNumber = TaskNumber.getNumberTasks(db) + 1
-    dateGeneration = datetime.now().strftime('%d-%m-%Y')
+    technician = Technician.getWithUsername(
+        request.cookies.get('user'))['techs']
+
+    dataForm['_id'] = uuid.uuid1().hex
+    dataForm['taskNumber'] = TaskNumber.getNumberTasks(db) + 1
+    dataForm['dateGeneration'] = datetime.now().strftime('%d-%m-%Y')
+    dataForm['name'] = technician[0]['name']
+    dataForm['position'] = technician[0]['position']
 
     try:
         db.child('tasks').child('pending-tasks').push(dataForm)
-        return {'message' : 'Se ha agregado correctamente la tarea', 'taskNumber': taskNumber}
+        return {'message': 'Se ha agregado correctamente la tarea', 'taskNumber': dataForm['taskNumber']}
     except:
         return 'No se pudo agregar la tarea'
 

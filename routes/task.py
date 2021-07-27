@@ -20,19 +20,11 @@ def task(app, url):
     def setPendingTask():
         dataForm = {
             'type': '',
+            'state': '',
             'description': '',
             'turn': ''
         }
 
-        #_id
-        #taskNumber
-        #type = request.form['type']
-        #state = 'Pendiente'
-        #description = request.form['description']
-        #dateGeneration
-        #turn = request.form['turn']
-        #name
-        #position
         if request.method == 'POST':
 
             for data in dataForm:
@@ -49,25 +41,25 @@ def task(app, url):
             'endTime': '',
             'hourMan': '',
             'description': '',
-            #'imageBefore': '',
-            #'imageAfter': ''
+            # 'imageBefore': '',
+            # 'imageAfter': ''
         }
         if request.method == 'POST':
-            #_id
-            #taskNumber
+            # _id
+            # taskNumber
             #type = request.form['type']
             #state = 'Finalizado'
             #description = request.form['description']
-            #dateGeneration
-            #dateClosing
+            # dateGeneration
+            # dateClosing
             #startTime = request.form['start-time']
             #endTime = request.form['end-time']
             #hourMan = request.form['hour-man']
-            #imageBefore
-            #imageAfter
+            # imageBefore
+            # imageAfter
             #turn = request.form['turn']
-            #name
-            #position
+            # name
+            # position
 
             for data in dataForm:
                 dataForm[data] = request.form[data]

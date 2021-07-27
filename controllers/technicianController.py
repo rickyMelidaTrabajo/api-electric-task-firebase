@@ -1,4 +1,5 @@
 from config import firebase
+from flask.globals import request
 
 db = firebase.database()
 
@@ -14,7 +15,7 @@ def getTechnicians():
         for tech in technicians.each():
             techs.append(tech.val())
 
-        return {'techs': techs}
+        return {'techs': techs, 'usuario': request.cookies.get('user')}
     except:
         return 'Error al obtener los tecnicos'
 
@@ -28,7 +29,17 @@ def setTechnician(data):
 
 
 def getWithUsername(username):
-    return 'Return technician with your username'
+    techs = []
+    try:
+        technicians = db.child('technicians').get()
+        for tech in technicians.each():
+            if tech.val()['username'] == username:
+                techs.append(tech.val())
+
+        return {'techs': techs}
+    except:
+        return 'Error al obtener los tecnicos'
+
 
 def getWithEmail(email):
     return 'Return technician with your username'

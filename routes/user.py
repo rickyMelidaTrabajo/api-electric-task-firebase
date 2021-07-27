@@ -1,7 +1,5 @@
 from controllers import userController
 from flask import request
-import crypt
-
 
 def user(app, url):
     @app.route(url+'get-user', methods=['GET'])
@@ -30,9 +28,6 @@ def user(app, url):
                 dataUsers[usr] = request.form[usr]
         try:
             if dataUsers['password'] == dataUsers['checkPassword']:
-                dataUsers['password'] = crypt.crypt(request.form['password'], 'taks')
-                dataUsers['checkPassword'] = crypt.crypt(request.form['checkPassword'], 'taks')
-            
                 return userController.setUser(dataUsers)
             else:
                 return 'Las contraseñas no coinciden'
