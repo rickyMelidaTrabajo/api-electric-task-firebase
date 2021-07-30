@@ -4,9 +4,10 @@ import controllers.numberTasks as TaskNumber
 import controllers.technicianController as Technician
 from datetime import datetime
 from flask.globals import request
+import os
 
 db = firebase.database()
-
+storage = firebase.storage()
 
 def getPendingTasks():
     tasks = []
@@ -47,12 +48,56 @@ def setPendingTask(dataForm):
         return 'No se pudo agregar la tarea'
 
 
-def setFinishedTask(dataForm):
+def setFinishedTask(dataForm, images):
+    
+    tasks = setAllTasks(dataForm, images)
+    print(tasks)
+
     try:
-        db.child('tasks').child('finished-tasks').push(dataForm)
+        db.child('tasks').child('finished-tasks').push(tasks)
         return 'Se ha agregado correctamente la tarea'
     except:
         return 'No se pudo agregar la tarea'
+
+
+def setAllTasks(dataForm, images):
+    dataFinishedTask = dataForm
+    
+    try:
+        technician = Technician.getWithUsername(request.cookies.get('user'))['techs']
+        
+        dataFinishedTask['_id'] = uuid.uuid1().hex
+        dataFinishedTask['taskNumber'] = int(TaskNumber.getNumberTasks(db)) + 1
+        dataFinishedTask['state'] = 'Finalizado'
+        dataFinishedTask['dateGeneration'] = datetime.now().strftime('%d-%m-%Y')
+        dataFinishedTask['dateClosing'] = datetime.now().strftime('%d-%m-%Y')
+        dataFinishedTask['name'] = technician[0]['name']
+        dataFinishedTask['position'] = technician[0]['position']
+
+        imagesStorage = saveImageStorage(images, dataForm['taskNumber'])
+
+        dataFinishedTask['image-before'] = imagesStorage['before']
+        dataFinishedTask['image-after'] = imagesStorage['after']
+        
+        return dataFinishedTask
+    except:
+        return 'Error al setear todas las tareas'
+
+
+def saveImageStorage(images, numTask):
+    routeStorage = 'tasks/' + str(numTask) + '/'
+
+    try:
+        storage.child(routeStorage + 'before').put(os.path.join(images['url-local-images'], 'before'))
+        storage.child(routeStorage + 'after').put(os.path.join(images['url-local-images'], 'after'))
+
+        urlBefore = storage.child(routeStorage + 'before').get_url(None)
+        urlAfter = storage.child(routeStorage + 'after').get_url(None)
+
+        #deleteTemporaryImage(images['url-local-images'])
+        return { 'message': 'success', 'before': urlBefore, 'after': urlAfter }
+    except:
+        return { 'message': 'success', 'error': True}
 
 
 def getTaskBy(searchBy, name):

@@ -1,6 +1,9 @@
 from controllers import taskController
 from flask import request
+from config import firebase
+import os
 
+storage = firebase.storage()
 
 def task(app, url):
 
@@ -43,30 +46,23 @@ def task(app, url):
             'endTime': '',
             'hourMan': '',
             'description': '',
-            # 'imageBefore': '',
-            # 'imageAfter': ''
         }
+
+        images = {}
         if request.method == 'POST':
-            # _id
-            # taskNumber
-            #type = request.form['type']
-            #state = 'Finalizado'
-            #description = request.form['description']
-            # dateGeneration
-            # dateClosing
-            #startTime = request.form['start-time']
-            #endTime = request.form['end-time']
-            #hourMan = request.form['hour-man']
-            # imageBefore
-            # imageAfter
-            #turn = request.form['turn']
-            # name
-            # position
+            imageBefore = request.files['image-before']
+            imageAfter = request.files['image-after']
+            mainRouteForImage = app.config['UPLOAD_FOLDER']
+
+            images['image-before'] = imageBefore.save(os.path.join(mainRouteForImage, 'before'))
+            images['image-after'] =  imageAfter.save(os.path.join(mainRouteForImage, 'after'))
+            images['url-local-images'] = app.config['UPLOAD_FOLDER']
 
             for data in dataForm:
                 dataForm[data] = request.form[data]
 
             try:
-                return taskController.setFinishedTask(dataForm)
+                return taskController.setFinishedTask(dataForm, images)
             except:
                 return 'Error al agregar tarea finalizada'
+     
