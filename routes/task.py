@@ -66,3 +66,8 @@ def task(app, url):
             except:
                 return 'Error al agregar tarea finalizada'
      
+
+    @app.route(url+'get-hours', methods=['GET'])
+    def getHours():
+        return taskController.getHours()
+        

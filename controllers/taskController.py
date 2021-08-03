@@ -2,7 +2,7 @@ from config import firebase
 import uuid
 import controllers.numberTasks as TaskNumber
 import controllers.technicianController as Technician
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask.globals import request
 import os
 
@@ -24,7 +24,7 @@ def getFinishedTasks():
     try:
         tasks = []
         finishedTasks = db.child('tasks').child('finished-tasks').get()
-        for task in finishedTasks:
+        for task in finishedTasks.each():
             tasks.append(task.val())
         return {'tasks': tasks, 'lenght': len(tasks)}
     except:
@@ -51,7 +51,6 @@ def setPendingTask(dataForm):
 def setFinishedTask(dataForm, images):
     
     tasks = setAllTasks(dataForm, images)
-    print(tasks)
 
     try:
         db.child('tasks').child('finished-tasks').push(tasks)
@@ -112,5 +111,33 @@ def getTasks():
         return 'Error al obtner las tareas'
 
 
+def getHours():
+    try:
+        hours = []
+        hour = 0
+        tasks = getFinishedTasks()['tasks']
+
+        for task in tasks:
+            hours.append(task['hourMan'])
+            sum = str(datetime.strptime(task['hourMan'], '%H:%M') + timedelta(hours=hour))[11:19]
+            hour += hourToDecimal(task['hourMan'])
+
+        return { 'hours' : hours, 'suma_de_horas': sum}
+    except:
+        return 'No ha tareas finalizadas'
+
+
+def hourToDecimal(hour):
+    try:
+        h = int(hour[0:2])
+        m = int(hour[3:5])
+
+        return float(h + float(m/60))
+
+    except:
+        return 'Hora no valida'
+
+
 def getHoursBy(typeTask):
     return 'Return hour by task type'
+
