@@ -65,9 +65,12 @@ def task(app, url):
                 return taskController.setFinishedTask(dataForm, images)
             except:
                 return 'Error al agregar tarea finalizada'
-     
 
     @app.route(url+'get-hours', methods=['GET'])
     def getHours():
         return taskController.getHours()
         
+    @app.route(url+'get-hour', methods=['GET'])
+    def getHour():
+        typeTask = request.args.get('task-type')
+        return taskController.getHoursBy(typeTask)

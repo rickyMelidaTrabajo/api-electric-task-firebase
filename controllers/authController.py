@@ -15,7 +15,7 @@ def sigin(email, password):
         cookie.delete_cookie('user')
         cookie.set_cookie('user', tech['username'])
 
-        return cookie
+        return {'user': tech['username'], 'message': 'Te has logueado correctamente', 'token': login}
     except:
         return 'Email o password incorrecto'
 

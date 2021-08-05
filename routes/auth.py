@@ -4,11 +4,18 @@ from flask import request
 
 def auth(app, url):
 
-    @app.route(url+'sigin', methods=['GET', 'POST'])
+    @app.route(url+'signin', methods=['GET', 'POST'])
     def sigin():
+
         if request.method == 'POST':
-            email = request.form['email']
-            password = request.form['password']
+            request_data = request.get_json()
+
+            try:
+                email = request.form['email']
+                password = request.form['password']
+            except:
+                email = request_data['email']
+                password = request_data['password']
 
             return authController.sigin(email, password)
         else:

@@ -138,6 +138,29 @@ def hourToDecimal(hour):
         return 'Hora no valida'
 
 
+def filterTaskBy(tasks, type):
+    filter = []
+    for task in tasks:
+        if task['type'] == type:
+            filter.append(task)
+
+    return filter
+
+
 def getHoursBy(typeTask):
-    return 'Return hour by task type'
+
+    try:
+        hours = []
+        hour = 0
+        tasks = getFinishedTasks()['tasks']
+        myFilter = filterTaskBy(tasks, typeTask)
+        
+        for task in myFilter:
+            hours.append(task['hourMan'])
+            sum = str(datetime.strptime(task['hourMan'], '%H:%M') + timedelta(hours=hour))[11:19]
+            hour += hourToDecimal(task['hourMan'])
+
+        return { 'hours' : hours, 'suma_de_horas': sum, 'tasks': myFilter}
+    except:
+        return 'No ha tareas finalizadas'
 
