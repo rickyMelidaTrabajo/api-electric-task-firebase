@@ -2,6 +2,7 @@ from controllers import taskController
 from flask import request
 from config import firebase
 import os
+import json
 
 storage = firebase.storage()
 
@@ -11,11 +12,11 @@ def task(app, url):
     def getTasks():
         return taskController.getTasks()
 
-    @app.route(url+'get-pending-task', methods=['GET'])
+    @app.route(url+'get-pending-tasks', methods=['GET'])
     def getPendingTask():
         return taskController.getPendingTasks()
 
-    @app.route(url+'get-finished-task', methods=['GET'])
+    @app.route(url+'get-finished-tasks', methods=['GET'])
     def getFinishedTask():
         return taskController.getFinishedTasks()
 
@@ -23,15 +24,20 @@ def task(app, url):
     def setPendingTask():
         dataForm = {
             'type': '',
-            'state': '',
             'description': '',
-            'turn': ''
+            'turn': '',
+            'username': ''
         }
 
         if request.method == 'POST':
+            request_data = request.get_json()
             try:
-                for data in dataForm:
-                    dataForm[data] = request.form[data]
+                try:
+                    for data in dataForm:
+                        dataForm[data] = request.form[data]
+                except:
+                    for data in dataForm:
+                        dataForm[data] = request_data[data]
 
                 return taskController.setPendingTask(dataForm)
             except:
@@ -42,34 +48,46 @@ def task(app, url):
         dataForm = {
             'type': '',
             'turn': '',
-            'startTime': '',
-            'endTime': '',
-            'hourMan': '',
+            'start_time': '',
+            'end_time': '',
+            'hour_man': '',
             'description': '',
+            'username': ''
         }
 
         images = {}
+
         if request.method == 'POST':
-            imageBefore = request.files['image-before']
-            imageAfter = request.files['image-after']
-            mainRouteForImage = app.config['UPLOAD_FOLDER']
-
-            images['image-before'] = imageBefore.save(os.path.join(mainRouteForImage, 'before'))
-            images['image-after'] =  imageAfter.save(os.path.join(mainRouteForImage, 'after'))
-            images['url-local-images'] = app.config['UPLOAD_FOLDER']
-
-            for data in dataForm:
-                dataForm[data] = request.form[data]
 
             try:
+                imageBefore = request.files['image_before']
+                imageAfter = request.files['image_after']
+                mainRouteForImage = app.config['UPLOAD_FOLDER']
+
+                images['image_before'] = imageBefore.save(os.path.join(mainRouteForImage, 'before'))
+                images['image_after'] =  imageAfter.save(os.path.join(mainRouteForImage, 'after'))
+                images['url-local-images'] = app.config['UPLOAD_FOLDER']
+
+                try:
+                    taskData = json.loads(request.form['data'])
+
+                    for data in dataForm:
+                        dataForm[data] = taskData[data]
+                except:
+                    request_data = request.get_json()
+
+                    for data in dataForm:
+                        dataForm[data] = request_data[data]
+
                 return taskController.setFinishedTask(dataForm, images)
             except:
-                return 'Error al agregar tarea finalizada'
+                return {'message': 'Faltan completar algunos campos desde el backend.'}
+
 
     @app.route(url+'get-hours', methods=['GET'])
     def getHours():
         return taskController.getHours()
-        
+
     @app.route(url+'get-hour', methods=['GET'])
     def getHour():
         typeTask = request.args.get('task-type')
