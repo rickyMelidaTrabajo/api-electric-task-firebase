@@ -1,5 +1,5 @@
 from config import firebase
-from flask import make_response, session
+from flask import make_response
 from controllers import userController
 
 
@@ -10,14 +10,10 @@ def sigin(email, password):
 
         login = login.sign_in_with_email_and_password(email, password)
         tech = userController.getUser(login['localId'])
-        session.clear()
-        session["user"] = "pepe"
         cookie = make_response({'username': tech['username'], 'message': 'Te has logueado correctamente', 'token': login['idToken']})
         cookie.delete_cookie('user')
         cookie.set_cookie('user', tech['username'])
 
-        print(session['user'])
-        #return {'user': tech['username'], 'message': 'Te has logueado correctamente', 'token': login}
         return cookie
     except:
         return 'Email o password incorrecto'
