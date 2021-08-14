@@ -119,7 +119,7 @@ def getHours():
         tasks = getFinishedTasks()['tasks']
 
         for task in tasks:
-            hours.append(task['hourMan'])
+            hours.append(task['hour_man'])
             sum = str(datetime.strptime(task['hour_man'], '%H:%M') + timedelta(hours=hour))[11:19]
             hour += hourToDecimal(task['hour_man'])
 
