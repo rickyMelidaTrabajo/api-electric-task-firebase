@@ -15,7 +15,7 @@ def getTechnicians():
         for tech in technicians.each():
             techs.append(tech.val())
 
-        return {'techs': techs, 'usuario': request.cookies.get('user')}
+        return {'techs': techs}
     except:
         return 'Error al obtener los tecnicos'
 

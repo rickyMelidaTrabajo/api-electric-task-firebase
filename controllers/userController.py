@@ -18,10 +18,12 @@ def getUser(id):
 
 def getUsers():
     users = []
+
     try:
         usrs = db.child('users').get()
-        for usr in usrs:
+        for usr in usrs.each():
             users.append(usr.val())
+
         return {'users': users}
     except:
         return 'Error al extraer los usuarios'

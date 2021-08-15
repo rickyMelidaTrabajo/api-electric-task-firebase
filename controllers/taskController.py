@@ -115,13 +115,26 @@ def getTasks():
 def getHours():
     try:
         hours = []
+        hourData = {
+            'horas': '',
+            'nombre': '',
+            'turno': '',
+            'tipoTrabajo': ''
+        }
         hour = 0
         tasks = getFinishedTasks()['tasks']
 
         for task in tasks:
-            hours.append(task['hour_man'])
+            hourData['horas'] = task['hour_man']
+            hourData['nombre'] = task['name']
+            hourData['turno'] = task['turn']
+            hourData['tipoTrabajo'] = task['type']
+
+            # hours.append(task['hour_man'])
             sum = str(datetime.strptime(task['hour_man'], '%H:%M') + timedelta(hours=hour))[11:19]
             hour += hourToDecimal(task['hour_man'])
+            hours.append(hourData)
+            hourData = {}
 
         return { 'hours' : hours, 'suma_de_horas': sum}
     except:
