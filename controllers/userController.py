@@ -8,7 +8,7 @@ def getUser(id):
     try:
         userDB = db.child('users').child(id).get()
 
-        for user in userDB:
+        for user in userDB.each():
             usr[user.key()] = user.val()
 
         return usr
@@ -18,29 +18,28 @@ def getUser(id):
 
 def getUsers():
     users = []
+
     try:
         usrs = db.child('users').get()
-        for usr in usrs:
+        for usr in usrs.each():
             users.append(usr.val())
+
         return {'users': users}
     except:
         return 'Error al extraer los usuarios'
 
 
 def setUser(data):
-    register = firebase.auth()
     try:
-        user = register.create_user_with_email_and_password(
-            data['email'], data['password'])
-
         h = hashlib.new('sha1')
         h.update(bytes(data['password'], 'utf-8'))
+        hashPass = h.hexdigest()
 
-        data['password'] = h.hexdigest()
-        data['checkPassword'] = h.hexdigest()
+        data['password'] = hashPass
+        del data['passwordCheck']
 
-        userDB = db.child('users').child(user['localId']).set(data)
+        userDB = db.child('users').child(data['_id']).set(data)
 
-        return {'user': user, 'userDB': userDB, 'message': 'Se ha creado un nuevo usuario'}
+        return {'userDB': userDB, 'message': 'Se ha creado un nuevo usuario'}
     except:
-        return 'El usuario o email ya existe'
+        return {'message': 'Error al guardar en la Base de datos'}

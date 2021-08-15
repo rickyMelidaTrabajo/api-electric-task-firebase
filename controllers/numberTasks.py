@@ -1,6 +1,6 @@
 def getNumberTasks(db):
     try:
-        return getNumberPendingTask(db) + getNumberFinishedTask(db)
+        return int(getNumberPendingTask(db)) + int(getNumberFinishedTask(db))
     except:
         return 'Error al obtener la cantidad total de tareas'
 
@@ -12,9 +12,10 @@ def getNumberPendingTask(db):
         for task in taskPending.each():
             tasks.append(task.val())
 
+        print(f'la cantidad de tareas pendientes es: {len(tasks)}')
         return len(tasks)
     except:
-        return 'Error al obtener la cantidad de tareas pendientes'
+        return 0
         
 
 def getNumberFinishedTask(db):
@@ -24,7 +25,8 @@ def getNumberFinishedTask(db):
         for task in taskPending.each():
             tasks.append(task.val())
 
+        print(f'la cantidad de tareas finalizadas es: {len(tasks)}')
         return len(tasks)
     except:
-        return 'Error al obtener la cantidad de tareas finalizadas'
+        return 0
 
