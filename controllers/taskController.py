@@ -116,19 +116,19 @@ def getHours():
     try:
         hours = []
         hourData = {
-            'horas': '',
-            'nombre': '',
-            'turno': '',
-            'tipoTrabajo': ''
+            'hours': '',
+            'name': '',
+            'turn': '',
+            'taskType': ''
         }
         hour = 0
         tasks = getFinishedTasks()['tasks']
 
         for task in tasks:
-            hourData['horas'] = task['hour_man']
-            hourData['nombre'] = task['name']
-            hourData['turno'] = task['turn']
-            hourData['tipoTrabajo'] = task['type']
+            hourData['hours'] = task['hour_man']
+            hourData['name'] = task['name']
+            hourData['turn'] = task['turn']
+            hourData['taskType'] = task['type']
 
             # hours.append(task['hour_man'])
             sum = str(datetime.strptime(task['hour_man'], '%H:%M') + timedelta(hours=hour))[11:19]
