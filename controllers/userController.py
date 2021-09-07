@@ -1,4 +1,5 @@
 import hashlib
+import uuid
 from config import firebase
 db = firebase.database()
 
@@ -34,9 +35,11 @@ def setUser(data):
         h = hashlib.new('sha1')
         h.update(bytes(data['password'], 'utf-8'))
         hashPass = h.hexdigest()
+        data['_id'] = uuid.uuid1().hex
+
 
         data['password'] = hashPass
-        del data['passwordCheck']
+        del data['checkPassword']
 
         userDB = db.child('users').child(data['_id']).set(data)
 

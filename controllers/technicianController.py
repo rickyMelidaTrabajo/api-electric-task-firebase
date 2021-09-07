@@ -10,10 +10,18 @@ def getTechnician(id):
 
 def getTechnicians():
     techs = []
+    ids = []
+    index = 0
     try:
         technicians = db.child('technicians').get()
         for tech in technicians.each():
             techs.append(tech.val())
+            ids.append(tech.key())
+
+        for t in techs:
+            t['_id'] = ids[index]
+            index = index+1
+            #print(t['name'])
 
         return {'techs': techs}
     except:
@@ -22,8 +30,8 @@ def getTechnicians():
 
 def setTechnician(data):
     try:
-        db.child('technicians').push(data)
-        return 'Se ha agregado el tecnico correctamente'
+        technician = db.child('technicians').push(data)
+        return {'message': 'Se ha agregado el tecnico correctamente', 'technician': technician}
     except:
         return 'Error al agregar tecnico'
 
