@@ -5,7 +5,15 @@ db = firebase.database()
 
 
 def getTechnician(id):
-    return 'Return only one tech'
+    techById = {}
+    try:
+        technician = db.child('technicians').child(id).get()
+        for tech in technician.each():
+            techById[tech.key()] = tech.val()
+
+        return {'message': 'succes', 'technician': techById}
+    except:
+        return {'message': 'Error al extraer tecnico'}
 
 
 def getTechnicians():
@@ -21,7 +29,6 @@ def getTechnicians():
         for t in techs:
             t['_id'] = ids[index]
             index = index+1
-            #print(t['name'])
 
         return {'techs': techs}
     except:
@@ -55,3 +62,11 @@ def getWithEmail(email):
 
 def getHours():
     return 'Return hours total from technician'
+
+def deleteTechnician(id):
+    try:
+        technician = db.child('technicians').child(id).remove()
+
+        return { 'message': 'Se ha eliminado el tecnico correctamente', 'tech': technician }
+    except:
+        return {'message': 'Error al eliminar el tecnico'}

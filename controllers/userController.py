@@ -46,3 +46,12 @@ def setUser(data):
         return {'userDB': userDB, 'message': 'Se ha creado un nuevo usuario'}
     except:
         return {'message': 'Error al guardar en la Base de datos'}
+
+
+def deleteUser(id):
+    try:
+        user = db.child('users').child(id).remove()
+
+        return { 'message': 'Se ha eliminado el tecnico correctamente', 'tech': technician }
+    except:
+        return {'message': 'Error al eliminar el tecnico'}
