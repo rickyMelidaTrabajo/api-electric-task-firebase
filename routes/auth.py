@@ -47,7 +47,7 @@ def auth(app, url):
                 '_id': '',
                 'email': '',
                 'password': '',
-                'passwordCheck': '',
+                'checkPassword': '',
                 'rol': 'Usuario',
                 'username': ''
             }
@@ -55,13 +55,15 @@ def auth(app, url):
             try:
                 userData['email'] = request.form['email']
                 userData['password'] = request.form['password']
-                userData['passwordCheck'] = request.form['password-check']
+                userData['checkPassword'] = request.form['checkPassword']
                 userData['username'] = request.form['username']
+                userData['rol'] = request.form['rol']
             except:
                 userData['email'] = request_data['email']
                 userData['password'] = request_data['password']
-                userData['passwordCheck'] = request_data['password-check']
+                userData['checkPassword'] = request_data['checkPassword']
                 userData['username'] = request_data['username']
+                userData['rol'] = request_data['rol']
 
             return authController.sigup(userData)
         else:

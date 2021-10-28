@@ -70,3 +70,10 @@ def deleteTechnician(id):
         return { 'message': 'Se ha eliminado el tecnico correctamente', 'tech': technician }
     except:
         return {'message': 'Error al eliminar el tecnico'}
+
+def updateTechnician(newData):
+    try:
+        update = db.child('technicians').child(newData['_id']).update(newData)
+        return {'message': 'Se ha modificado el tecnico', 'res': update}
+    except:
+        return {'message': 'Error al modificar el tecnico'}

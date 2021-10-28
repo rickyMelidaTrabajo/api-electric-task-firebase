@@ -5,17 +5,24 @@ import hashlib
 
 def sigin(email, password):
     login = firebase.auth()
+    message = 'Email o password incorrecto'
+
+    if email == '' or password == '':
+        message = 'Falta completar algun/os campos.'
 
     try:
         loginUser = login.sign_in_with_email_and_password(email, password)
         tech = userController.getUser(loginUser['localId'])
-        cookie = make_response({'username': tech['username'], 'message': 'Te has logueado correctamente', 'status': 200 , 'token': loginUser['refreshToken']})
-        cookie.delete_cookie('user')
-        cookie.set_cookie('user', tech['username'])
-
+        if tech['existUser'] :
+            message = 'Te has logueado correctamente'
+            cookie = make_response({'username': tech['res']['username'], 'message': message, 'status': 200 , 'token': loginUser['refreshToken']})
+            cookie.delete_cookie('user')
+            cookie.set_cookie('user', tech['res']['username'])
+        else:
+            message = tech['message']
         return cookie
     except:
-        return 'Email o password incorrecto'
+        return message
 
 
 def signinAdmin(username, password):
@@ -46,7 +53,7 @@ def signinAdmin(username, password):
 def sigup(userData):
     register = firebase.auth()
 
-    if userData['password'] == userData['passwordCheck']:
+    if userData['password'] == userData['checkPassword']:
         try:
             usr = register.create_user_with_email_and_password(userData['email'], userData['password'])
             userData['_id'] = usr['localId']

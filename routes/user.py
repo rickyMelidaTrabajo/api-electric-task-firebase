@@ -20,17 +20,50 @@ def user(app, url):
             'email': '',
             'password': '',
             'checkPassword':'',
-            'rol': ''
+            'rol': '',
+            '_id':''
         }
 
         if request.method == 'POST':
-            for usr in dataUsers:
-                dataUsers[usr] = request.form[usr]
-        try:
+            request_data = request.get_json()
+            try:
+                for usr in dataUsers:
+                    dataUsers[usr] = request.form[usr]
+            except:
+                for data in dataUsers:
+                    dataUsers[data] = request_data[data]
+
             if dataUsers['password'] == dataUsers['checkPassword']:
                 return userController.setUser(dataUsers)
             else:
                 return 'Las contraseñas no coinciden'
 
-        except:
             return 'Error al agregar nuevo usuario'
+
+    @app.route(url+'delete-user', methods=['GET', 'POST', 'DELETE'])
+    def deleteUserByUsername():
+        try:
+            id = request.args.get("id")
+            return userController.deleteUser(id)
+        except:
+            return {'message': 'Error al recibir el parametro'}
+
+    @app.route(url+'update-user', methods=['GET', 'PUT', 'POST'])
+    def updateUser():
+        dataUsers = {
+            'username': '',
+            'email': '',
+            'password': '',
+            'checkPassword':'',
+            'rol': '',
+            '_id':''
+        }
+        try:
+            newData = request.get_json()
+
+            for myData in dataUsers:
+                dataUsers[myData] = newData[myData]
+
+            return userController.updateUser(dataUsers)
+        except Exception as e:
+            return {'message': 'Error al extraer los datos a modificar'}
